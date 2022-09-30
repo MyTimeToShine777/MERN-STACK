@@ -1,37 +1,63 @@
 import { StatusCodes } from "http-status-codes";
+import Goal from "../models/model.js";
+import { createCustomAPIError } from "../errors/custom-error.js";
 
 //Desc Get All Goals
 //Route /api/v1/goals
 //Access Private
 const getGoals = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "Get Goals" });
+  const goals = await Goal.find({});
+  res.status(StatusCodes.OK).json({ nbHits: goals.length, goals });
 };
 //Desc Post Goals
 //Route /api/v1/goals
 //Access Private
 const setGoals = async (req, res) => {
-  res.status(StatusCodes.CREATED).json({ msg: "Set Goals" });
+  const setGoal = await Goal.create(req.body);
+  res.status(StatusCodes.CREATED).json({ setGoal });
 };
 //Desc Get Single Goals
 //Route /api/v1/goals/:id
 //Access Private
-const getSingleGoals = async (req, res) => {
+const getSingleGoals = async (req, res, next) => {
   const { id } = req.params;
-  res.status(StatusCodes.OK).json({ msg: `Get Single Goals ${id}` });
+  const goal = await Goal.findById(id);
+  if (!goal) {
+    return next(
+      createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
+    );
+  }
+  res.status(StatusCodes.OK).json({ goal });
 };
 //Desc Put Single Goals
 //Route /api/v1/goals/:id
 //Access Private
-const updateGoals = async (req, res) => {
+const updateGoals = async (req, res, next) => {
   const { id } = req.params;
-  res.status(StatusCodes.OK).json({ msg: `Update Goals ${id}` });
+  const data = req.body;
+  const updatedGoal = await Goal.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedGoal) {
+    return next(
+      createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
+    );
+  }
+  res.status(StatusCodes.OK).json({ updatedGoal });
 };
 //Desc Delete Single Goals
 //Route /api/v1/goals/:id
 //Access Private
-const deleteGoals = async (req, res) => {
+const deleteGoals = async (req, res, next) => {
   const { id } = req.params;
-  res.status(StatusCodes.OK).json({ msg: `Delete Goals ${id}` });
+  const deletedGoal = await Goal.findByIdAndDelete(id);
+  if (!deletedGoal) {
+    return next(
+      createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
+    );
+  }
+  res.status(StatusCodes.OK).json({ deletedGoal });
 };
 
 export { getGoals, getSingleGoals, setGoals, updateGoals, deleteGoals };
