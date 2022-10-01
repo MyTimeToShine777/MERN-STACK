@@ -9,7 +9,13 @@ import {
   deleteGoals,
 } from "../controllers/goalController.js";
 
-router.route("/").get(getGoals).post(setGoals);
-router.route("/:id").get(getSingleGoals).put(updateGoals).delete(deleteGoals);
+import protectRoute from "../middleware/authMiddleware.js";
+
+router.route("/").get(protectRoute, getGoals).post(protectRoute, setGoals);
+router
+  .route("/:id")
+  .get(protectRoute, getSingleGoals)
+  .put(protectRoute, updateGoals)
+  .delete(protectRoute, deleteGoals);
 
 export default router;

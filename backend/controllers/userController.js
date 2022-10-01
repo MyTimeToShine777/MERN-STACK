@@ -33,12 +33,17 @@ const registerUser = async (req, res, next) => {
     email,
     password: hashedPassword,
   });
+  const payload = {
+    id: user._id,
+    name: user.name,
+  };
 
   if (user) {
     res.status(StatusCodes.CREATED).json({
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(payload),
     });
   } else {
     return next(
@@ -54,12 +59,17 @@ const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   //Check for User Email
   const user = await User.findOne({ email });
+  const payload = {
+    id: user._id,
+    name: user.name,
+  };
 
   if (user && (await bcrypt.compare(password, user.password))) {
     res.status(StatusCodes.OK).json({
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(payload),
     });
   } else {
     return next(
@@ -67,11 +77,28 @@ const loginUser = async (req, res, next) => {
     );
   }
 };
-//Desc   GET User dat
+//Desc   GET User data
 //Route /api/users/me (GET)
-//Access Public
+//Access Private
 const getMe = async (req, res) => {
-  res.status(StatusCodes.OK).send({ msg: "User data" });
+  const { _id, name, email } = await User.findById(req.user.id);
+  res.status(StatusCodes.OK).json({
+    id: _id,
+    name,
+    email,
+  });
+};
+
+//Generate JWT
+
+const generateToken = (payload) => {
+  return jwt.sign(
+    { id: payload.id, name: payload.name },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "30d",
+    }
+  );
 };
 
 export { registerUser, loginUser, getMe };

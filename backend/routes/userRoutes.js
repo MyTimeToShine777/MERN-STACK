@@ -7,8 +7,10 @@ import {
   getMe,
 } from "../controllers/userController.js";
 
+import protectRoute from "../middleware/authMiddleware.js";
+
 router.route("/").post(registerUser);
 router.route("/login").post(loginUser);
-router.route("/me").get(getMe);
+router.route("/me").get(protectRoute, getMe);
 
 export default router;
