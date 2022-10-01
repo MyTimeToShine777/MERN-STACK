@@ -5,7 +5,8 @@ const app = express();
 import dotenv from "dotenv";
 import connectDB from "./db/connect.js";
 dotenv.config();
-import routes from "./routes/routes.js";
+import goalRoutes from "./routes/goalRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/errorHandler.js";
 
@@ -13,7 +14,9 @@ import errorHandlerMiddleware from "./middleware/errorHandler.js";
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //Routes
-app.use("/api/v1/goals", routes);
+
+app.use("/api/users", userRoutes);
+app.use("/api/v1/goals", goalRoutes);
 
 //ErrorMiddleware
 app.use(notFoundMiddleware);

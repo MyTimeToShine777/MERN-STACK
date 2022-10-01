@@ -1,23 +1,23 @@
 import { StatusCodes } from "http-status-codes";
-import Goal from "../models/model.js";
+import Goal from "../models/goalModel.js";
 import { createCustomAPIError } from "../errors/custom-error.js";
 
 //Desc Get All Goals
-//Route /api/v1/goals
+//Route /api/v1/goals (GET)
 //Access Private
 const getGoals = async (req, res) => {
   const goals = await Goal.find({});
   res.status(StatusCodes.OK).json({ nbHits: goals.length, goals });
 };
 //Desc Post Goals
-//Route /api/v1/goals
+//Route /api/v1/goals (POST)
 //Access Private
 const setGoals = async (req, res) => {
   const setGoal = await Goal.create(req.body);
   res.status(StatusCodes.CREATED).json({ setGoal });
 };
 //Desc Get Single Goals
-//Route /api/v1/goals/:id
+//Route /api/v1/goals/:id (GET)
 //Access Private
 const getSingleGoals = async (req, res, next) => {
   const { id } = req.params;
@@ -30,7 +30,7 @@ const getSingleGoals = async (req, res, next) => {
   res.status(StatusCodes.OK).json({ goal });
 };
 //Desc Put Single Goals
-//Route /api/v1/goals/:id
+//Route /api/v1/goals/:id (PUT)
 //Access Private
 const updateGoals = async (req, res, next) => {
   const { id } = req.params;
@@ -47,7 +47,7 @@ const updateGoals = async (req, res, next) => {
   res.status(StatusCodes.OK).json({ updatedGoal });
 };
 //Desc Delete Single Goals
-//Route /api/v1/goals/:id
+//Route /api/v1/goals/:id (DELETE)
 //Access Private
 const deleteGoals = async (req, res, next) => {
   const { id } = req.params;
