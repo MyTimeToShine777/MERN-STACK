@@ -23,7 +23,7 @@ const setGoals = async(req, res, next) => {
         text: req.body.text,
         user: req.user.id,
     });
-    res.status(StatusCodes.CREATED).json({ setGoal });
+    res.status(StatusCodes.CREATED).json(setGoal);
 };
 //Desc Get Single Goals
 //Route /api/v1/goals/:id (GET)
@@ -36,7 +36,7 @@ const getSingleGoals = async(req, res, next) => {
             createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
         );
     }
-    res.status(StatusCodes.OK).json({ goal });
+    res.status(StatusCodes.OK).json(goal);
 };
 //Desc Put Single Goals
 //Route /api/v1/goals/:id (PUT)
@@ -70,7 +70,7 @@ const updateGoals = async(req, res, next) => {
             createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
         );
     }
-    res.status(StatusCodes.OK).json({ updatedGoal });
+    res.status(StatusCodes.OK).json(updatedGoal);
 };
 //Desc Delete Single Goals
 //Route /api/v1/goals/:id (DELETE)
@@ -101,7 +101,8 @@ const deleteGoals = async(req, res, next) => {
             createCustomAPIError(`No Goal with ID: ${id}`, StatusCodes.NOT_FOUND)
         );
     }
-    res.status(StatusCodes.OK).json({ deletedGoal });
+    await goal.remove();
+    res.status(StatusCodes.OK).json({ id: req.params.id });
 };
 
 export { getGoals, getSingleGoals, setGoals, updateGoals, deleteGoals };
