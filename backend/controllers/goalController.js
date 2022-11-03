@@ -102,7 +102,7 @@ const deleteGoals = async(req, res, next) => {
         );
     }
     await goal.remove();
-    res.status(StatusCodes.OK).json({ id: req.params.id });
+    res.status(StatusCodes.OK).json({ id: id });
 };
 
 export { getGoals, getSingleGoals, setGoals, updateGoals, deleteGoals };
